@@ -20,9 +20,11 @@ if [ -z "$mount_dir" ]; then
   exit 1
 fi
 
+pattern="${nfs_server_host}:${nfs_server_dir}"
+
 echo ''
 echo '#### Mount the nfs directory'
-if [ ! -z "$(df | grep "$nfs_server_host")" ]; then
+if [ ! -z "$(df | grep "$pattern")" ]; then
   echo $nfs_server_host already mounted
 else
   mkdir -p "$mount_dir"
@@ -34,7 +36,7 @@ echo ''
 echo '#### setup /etc/fstab to mount nfs when reboot'
 fstab_config="$nfs_server_host:$nfs_server_dir	$mount_dir nfs auto 0 0"
 
-if [ ! -z "$(cat /etc/fstab | grep "$nfs_server_host")" ]; then
+if [ ! -z "$(cat /etc/fstab | grep "$pattern")" ]; then
   echo $nfs_server_host already setup at /etc/fstab
 else
   echo "$fstab_config" >> /etc/fstab
